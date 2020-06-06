@@ -11,4 +11,7 @@ module.exports = app => {
 
   // 排行榜
   router.get('/rank',controller.rank.index.index)
+  
+  // 玩家
+  router.get('/player',controller.player.getData)
 };
