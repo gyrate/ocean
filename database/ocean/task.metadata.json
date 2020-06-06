@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"ocean.task"}],"uuid":"793a7ed9f21b432ea07f720f8d651e6f"}
