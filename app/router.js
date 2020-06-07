@@ -13,5 +13,6 @@ module.exports = app => {
   router.get('/rank',controller.rank.index.index)
   
   // 玩家
-  router.get('/player',controller.player.getData)
+  router.get('/player',controller.player.query)
+  router.get('/player/add',controller.player.add)
 };
