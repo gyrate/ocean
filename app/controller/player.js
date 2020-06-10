@@ -10,7 +10,9 @@ class PlayerController extends Controller {
     var res = await ctx.model.Player.find({}, e=> {
       console.log(e)
     })
-    ctx.body = res
+    // ctx.body = res
+
+    ctx.body = await ctx.renderView('player.tpl' , {data: res})
   }
   async add() {
     const {ctx} = this

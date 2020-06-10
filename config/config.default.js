@@ -1,7 +1,7 @@
 /* eslint valid-jsdoc: "off" */
 
 'use strict';
-
+const path = require('path')
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -18,6 +18,7 @@ module.exports = appInfo => {
   // add your middleware config here
   config.middleware = [];
 
+  // database
   config.mongoose = {
     client: {
       // 数据库地址
@@ -30,6 +31,19 @@ module.exports = appInfo => {
       // plugins: [createdPlugin, [updatedPlugin, pluginOptions]],
     },
   };
+
+  // template engineer
+  config.view = {
+    defaultViewEngine: 'nunjucks',
+    mapping: {
+      '.tpl': 'nunjucks'
+    },
+    // multi folders
+    root:[
+      path.join(appInfo.baseDir, 'app/view'),
+      path.join(appInfo.baseDir, 'path/to/another')
+    ].join(',')
+  }
 
   // add your user config here
   const userConfig = {
