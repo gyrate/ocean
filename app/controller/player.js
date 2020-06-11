@@ -7,12 +7,10 @@ class PlayerController extends Controller {
   async query () {
     const { ctx } = this
     // 访问数据库表查询所有项
-    var res = await ctx.model.Player.find({}, e=> {
-      console.log(e)
-    })
-    // ctx.body = res
+    var res = await ctx.model.Player.find({})
+    ctx.body = res
 
-    ctx.body = await ctx.renderView('player.tpl' , {data: res})
+    // ctx.body = await ctx.renderView('player.tpl' , {data: res})
   }
   async add() {
     const {ctx} = this

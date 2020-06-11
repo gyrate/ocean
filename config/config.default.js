@@ -33,6 +33,7 @@ module.exports = appInfo => {
   };
 
   // template engineer
+  /*
   config.view = {
     defaultViewEngine: 'nunjucks',
     mapping: {
@@ -44,6 +45,26 @@ module.exports = appInfo => {
       path.join(appInfo.baseDir, 'path/to/another')
     ].join(',')
   }
+  */
+
+  // 保证构建的静态资源文件能够被访问到
+  config.static = {
+    prefix: '/public/',
+    dir: path.join(appInfo.baseDir, 'public')
+  };
+
+  config.vuessr = {
+    layout: path.join(appInfo.baseDir, 'app/web/view/layout.html'),
+    renderOptions: {
+      basedir: path.join(appInfo.baseDir, 'app/view')
+    }
+  };
+
+  config.webpack = {
+    browser: false, // 是否自动打开浏览器
+    webpackConfigList:require('easywebpack-vue').getWebpackConfig()
+  };
+
 
   // add your user config here
   const userConfig = {
