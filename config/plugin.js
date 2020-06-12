@@ -8,10 +8,10 @@ module.exports = {
     enable: true,
     package: 'egg-view-vue-ssr'
   },
-  mongoose: {
-    enable: true,
-    package: 'egg-mongoose',
-  },
+  // mongoose: {
+  //   enable: true,
+  //   package: 'egg-mongoose',
+  // },
   nunjucks: {
     enable: true,
     package: 'egg-view-nunjucks',

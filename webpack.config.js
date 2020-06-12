@@ -1,6 +1,10 @@
 module.exports = {
-  target: 'web',
-  framework: 'vue', // 使用 easywebpack-vue 构建解决方案
   devtool: 'eval',
-  entry: 'app/web/page/home/home.js',
+  target: 'web',
+  entry: {
+    home: 'app/web/page/home/home.js'
+  },
+  framework: 'vue', // 使用 easywebpack-vue 构建解决方案
+  cssExtract: true,
+  //dll: ['vue', 'vue-router', 'vuex', 'axios']
 };

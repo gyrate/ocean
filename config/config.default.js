@@ -60,9 +60,16 @@ module.exports = appInfo => {
     }
   };
 
-  config.webpack = {
-    browser: false, // 是否自动打开浏览器
-    webpackConfigList:require('easywebpack-vue').getWebpackConfig()
+  exports.security = {
+    csrf: {
+      ignoreJSON: false,
+      cookieName: 'csrfToken',
+      // sessionName: 'csrfToken',
+      // headerName: 'x-csrf-token'
+    },
+    xframe: {
+      enable: false,
+    },
   };
 
 

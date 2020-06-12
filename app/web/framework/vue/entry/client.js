@@ -7,9 +7,6 @@ export default function(options) {
     options.data = Object.assign(window.__INITIAL_STATE__, options.data && options.data());
   }
 
-  console.log("window.__INITIAL_STATE__")
-  console.log(window.__INITIAL_STATE__)
-
   const app = new Vue(options);
   app.$mount('#app');
 }
