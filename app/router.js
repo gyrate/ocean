@@ -15,6 +15,7 @@ module.exports = app => {
   router.get('/rank',controller.rank.index.index)
 
   // 玩家
-  router.get('/player',controller.player.query)
+  router.get('/player/query',controller.player.query)
   router.get('/player/add',controller.player.add)
+  router.post('/player/remove', controller.player.remove)
 };

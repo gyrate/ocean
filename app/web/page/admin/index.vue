@@ -1,49 +1,23 @@
 <template>
-  <div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>名称</th>
-          <th>经验值</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in dataList" :key="item._id">
-          <td>{{item.name}}</td>
-          <td>{{item.currExp}}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div> {{message}}</div>
-
-  </div>
+  <Layout>
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
+  </Layout>
 </template>
-<style>
-</style>
 <script type="text/babel">
-  import axios from 'axios'
-  export default {
-    components: {},
-    computed: {},
+  import Vue from 'vue';
+  import ElementUI from 'element-ui';
+  import 'element-ui/lib/theme-chalk/index.css';
+  import Layout from 'component/layout/admin/index.vue';
 
-    data(){
-      return {
-        message: `我是在home.vue的 测试数据`,
-        dataList:[]
-      }
+  Vue.use(ElementUI);
+
+  export default {
+    components: {
+      Layout,
     },
-    mounted() {
-      this.getData()
-    },
-    methods: {
-      getData(){
-        axios.get('/player').then(res=>{
-          // console.log(res.data)
-          this.dataList = res.data
-        })
-      }
-    }
-  }
+    computed: {},
+    mounted() {},
+  };
 </script>

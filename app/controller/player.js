@@ -24,14 +24,9 @@ class PlayerController extends Controller {
     ctx.body = res
   }
 
-  async remove(id) {
-    if (!id) {
-      return
-    }
-    const { ctx } = this
-    await ctx.model.Player.remove({_id: id}, e=> {
-      console.log('remove completed')
-    })
+  async remove(ctx) {
+    const query = ctx.request.body
+    ctx.body = await ctx.model.Player.remove({_id: query.id})
   }
 
   async update(id, newItem){

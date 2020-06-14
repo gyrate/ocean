@@ -1,6 +1,9 @@
 {
+  "chunk/0.js": "/public/js/chunk/0.js",
   "admin.js": "/public/js/chunk/admin.js",
   "runtime.js": "/public/js/runtime.js",
+  "font/element-icons.ttf": "/public/font/element-icons.ttf",
+  "font/element-icons.woff": "/public/font/element-icons.woff",
   "deps": {
     "admin.js": {
       "js": [
