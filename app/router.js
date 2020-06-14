@@ -7,8 +7,8 @@ module.exports = app => {
   const { router, controller } = app;
 
   // 首页
-  router.get('/', controller.home.client)
-  router.get('/home', controller.home.client)
+  router.get('/', controller.admin.client)
+  router.get('/admin', controller.admin.client)
   // router.get('/server', controller.home.server);
 
   // 排行榜

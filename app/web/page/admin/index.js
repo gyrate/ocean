@@ -1,4 +1,4 @@
-import Home from './home.vue';
+import Home from './index.vue';
 import serverRender from '../../framework/vue/entry/server.js';
 import clientRender from '../../framework/vue/entry/client.js';
 
