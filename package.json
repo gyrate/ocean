@@ -28,11 +28,15 @@
     "egg-view-vue-ssr": "^3.3.2",
     "egg-webpack": "^4.5.3",
     "egg-webpack-vue": "^2.0.2",
+    "element-ui": "^2.13.2",
     "eslint": "^5.13.0",
     "eslint-config-egg": "^7.1.0",
     "vue": "^2.6.11",
-    "vue-router": "^3.3.2",
-    "vuex": "^3.4.0"
+    "vue-i18n": "^8.18.2",
+    "vue-router": "^3.3.4",
+    "vue-router-sync": "^0.1.0",
+    "vuex": "^3.4.0",
+    "vuex-router-sync": "^5.0.0"
   },
   "engines": {
     "node": ">=10.0.0"

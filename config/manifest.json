@@ -1,11 +1,14 @@
 {
-  "home.js": "/public/js/chunk/home.js",
+  "chunk/0.js": "/public/js/chunk/0.js",
+  "admin.js": "/public/js/chunk/admin.js",
   "runtime.js": "/public/js/runtime.js",
+  "font/element-icons.ttf": "/public/font/element-icons.ttf",
+  "font/element-icons.woff": "/public/font/element-icons.woff",
   "deps": {
-    "home.js": {
+    "admin.js": {
       "js": [
         "/public/js/runtime.js",
-        "/public/js/chunk/home.js"
+        "/public/js/chunk/admin.js"
       ],
       "css": []
     }
