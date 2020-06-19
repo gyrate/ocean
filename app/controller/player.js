@@ -4,17 +4,18 @@ const Controller = require('egg').Controller;
 
 class PlayerController extends Controller {
 
-  async query () {
-    const { ctx } = this
+  // 查询
+  async query (ctx) {
+    const query = ctx.request.body
     // 访问数据库表查询所有项
-    var res = await ctx.model.Player.find({})
+    var res = await ctx.model.Player.find(query)
     ctx.body = res
 
-    // ctx.body = await ctx.renderView('player.tpl' , {data: res})
   }
-  async add() {
-    const {ctx} = this
 
+  // 添加
+  async add(ctx) {
+    const reqBody = ctx.request.body
     let res = await ctx.model.Player.create({
       name: "haha" + parseInt(Math.random() * 10000),
       currExp: 210
@@ -24,11 +25,13 @@ class PlayerController extends Controller {
     ctx.body = res
   }
 
+  // 删除
   async remove(ctx) {
     const query = ctx.request.body
     ctx.body = await ctx.model.Player.remove({_id: query.id})
   }
 
+  // 更新
   async update(id, newItem){
     if(!id || !newItem){
       return
@@ -39,14 +42,20 @@ class PlayerController extends Controller {
     })
   }
 
-  // 批量覆盖数据
-  async cover(newItems) {
-    const { ctx } = this
-    for (let i = 0; i < newItems.length; i++) {
-      //逐一覆盖
-      await ctx.model.Player.update({userName: newItems[i].userName}, newItems[i], false, true)
-    }
+  // 批量添加
+  async batchAdd(ctx) {
 
+    //todo: 首先过滤掉ukName重复的数据
+    const querys = ctx.request.body
+    ctx.body = await ctx.model.Player.insertMany(querys)
+  }
+
+  // 批量删除
+  async batchRemove(ctx){
+    const query = ctx.request.body
+    ctx.body = await ctx.model.Player.deleteMany(query, err => {
+      console.log(err)
+    })
   }
 
 }

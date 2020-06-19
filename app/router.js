@@ -17,5 +17,7 @@ module.exports = app => {
   // 玩家
   router.get('/player/query',controller.player.query)
   router.get('/player/add',controller.player.add)
+  router.post('/player/batchadd',controller.player.batchAdd)
   router.post('/player/remove', controller.player.remove)
+  router.post('/player/batchremove', controller.player.batchRemove)
 };

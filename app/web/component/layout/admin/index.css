@@ -10,7 +10,7 @@
 
 .admin .search {
   margin-top: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 .admin label {
   padding-left: 8px;
@@ -35,4 +35,8 @@
 
 .admin .top16 {
   margin-top: 16px;
+}
+
+.admin .button-group{
+  padding: 0.5em 0;
 }

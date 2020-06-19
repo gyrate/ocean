@@ -21,6 +21,10 @@
       </el-row>
     </div>
 
+    <div class="button-group">
+      <el-button type="primary" size="small" @click="batchAdd">批量导入</el-button>
+    </div>
+
     <el-table
             :data="articleList"
             v-loading="loading"
@@ -32,10 +36,29 @@
               type="selection"
               width="55">
       </el-table-column>
-      <el-table-column prop="name" label="玩家">
+      <el-table-column prop="username" label="用户名">
+      </el-table-column>
+      <el-table-column prop="name" label="玩家姓名">
+      </el-table-column>
+      <el-table-column prop="role" label="角色">
+      </el-table-column>
+      <el-table-column prop="level.exp_level" label="经验等级">
+      </el-table-column>
+      <el-table-column prop="level.skill_level" label="职业等级">
       </el-table-column>
       <el-table-column prop="currExp" label="当前经验值">
       </el-table-column>
+      <!--<el-table-column prop="currExp" label="日报获得">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column prop="currExp" label="分享获得">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column prop="currExp" label="任务获得">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column prop="currExp" label="活动获得">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column prop="currExp" label="建议获得">-->
+      <!--</el-table-column>-->
+
       <el-table-column
               label="操作"
               width="180">
@@ -147,6 +170,30 @@
       batchSelect(val) {
         this.batchSelectArray = val;
       },
+      batchAdd(){
+
+        let querys = [{
+          name: 'num0',
+          currExp: 0
+        },{
+          name: 'num1',
+          currExp: 10
+        },{
+          name: 'num2',
+          currExp: 20
+        },{
+          name: 'num3',
+          currExp: 30
+        },{
+          name: 'num4',
+          currExp: 40
+        }]
+
+        request.post('player/batchadd', querys).then(res => {
+          this.$message(`批量添加成功!`)
+          this.getData()
+        })
+      }
     }
   }
 </script>
