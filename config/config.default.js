@@ -16,7 +16,16 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1589615054062_1215';
 
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = [
+    'robot',
+    'pack'
+  ];
+
+  config.robot = {
+    ua: [
+      /Baiduspider/i
+    ]
+  };
 
   // database
   config.mongoose = {

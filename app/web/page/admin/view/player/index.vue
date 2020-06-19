@@ -134,7 +134,7 @@
     methods: {
       getData() {
         request.get('/player/query').then(res=>{
-          this.articleList = res.data
+          this.articleList = res.data.data
         })
       },
       fetchApi({ $store, $router }, json) {
