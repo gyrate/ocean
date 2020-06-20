@@ -2,39 +2,27 @@
   <div>
     <div class="search">
       <el-row class="clear">
-        <label> 标题:</label><el-input class="search-input" clearable v-model="q.title" placeholder="关键字"></el-input>
-        <label> 分类:</label><el-select  v-model="q.categoryId" placeholder="分类">
-        <el-option v-for="item in categories"
-                   :key="item.id"
-                   :label="item.name"
-                   :value="item.categoryId">
-        </el-option>
+        <label>玩家姓名:</label>
+        <el-input class="search-input" clearable v-model="q.name"  placeholder="关键字" size="small"></el-input>
       </el-select>
-        <label> 状态:</label><el-select  v-model="q.status" placeholder="状态">
-        <el-option v-for="item in status"
-                   :key="item.id"
-                   :label="item.name"
-                   :value="item.status">
-        </el-option>
-      </el-select>
-        <el-button class="search-button" type="primary" @click="query()">查询</el-button>
+        <el-button class="search-button" type="primary" @click="query()" size="small">查询</el-button>
       </el-row>
     </div>
 
     <div class="button-group">
+      <el-button type="success" size="small" @click="addPlayer">新增玩家</el-button>
       <el-button type="primary" size="small" @click="batchAdd">批量导入</el-button>
+      <el-button type="primary" size="small" @click="batchRemove">批量删除</el-button>
     </div>
 
     <el-table
-            :data="articleList"
+            ref="playerTable"
+            :data="dataList"
             v-loading="loading"
             element-loading-text="拼命加载中"
             border
-            @selection-change="batchSelect"
             style="width: 99.5%;">
-      <el-table-column
-              type="selection"
-              width="55">
+      <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column prop="username" label="用户名">
       </el-table-column>
@@ -83,9 +71,29 @@
       </el-pagination>
     </div>
 
+    <el-dialog title="编辑玩家" :visible.sync="editPlayerVisible" width="80%">
+      <div>
+        <el-form ref="form" :model="form" label-width="80px">
+          <el-form-item label="用户名">
+            <el-input v-model="form.username"></el-input>
+          </el-form-item>
+          <el-form-item label="玩家姓名">
+            <el-input v-model="form.name"></el-input>
+          </el-form-item>
+          <el-form-item label="角色">
+            <el-input v-model="form.role"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editPlayerVisible = false">取 消</el-button>
+        <el-button type="primary" @click="savePlayer">保 存</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
-<script type="text/ecmascript-6">
+<script >
   import request from '../../../../framework/network/request'
   export default{
     name: 'player',
@@ -93,16 +101,27 @@
     data(){
       return {
         q: {
-          title: undefined,
-          categoryId: undefined,
-          statusId: undefined,
+          name: '',
           pageIndex: 1,
           pageSize: 10
+        },
+        form:{
+          username:'',
+          name:'',
+          role:'',
+          currExp: 0,
+          level:{
+            exp_level: 0,
+            skill_level: 0
+          }
         },
         total: 100,
         //请求时的loading效果
         loading: false,
-        articleList: []
+        dataList: [],
+        editPlayerVisible: false,
+        mode: '', //add edit
+        currPlayerId: null
       }
     },
     computed: {
@@ -124,8 +143,8 @@
 //      total() {
 //        return this.$store.state.articleTotal;
 //      },
-//      articleList() {
-//        return this.$store.state.articleList;
+//      dataList() {
+//        return this.$store.state.dataList;
 //      }
     },
     mounted(){
@@ -134,18 +153,11 @@
     methods: {
       getData() {
         request.get('/player/query').then(res=>{
-          this.articleList = res.data.data
+          this.dataList = res.data.data
         })
-      },
-      fetchApi({ $store, $router }, json) {
-//        return $store.dispatch(SET_ARTICLE_LIST, json);
       },
       query() {
         this.fetchApi(this, this.q);
-      },
-
-      handleSelectionChange(val) {
-        console.log("handleSelectionChange", val);
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
@@ -158,7 +170,44 @@
         this.fetchApi(this, this.q);
       },
       handleEdit(index, row) {
-        this.$message(`你点击了编辑操作 index:${index}, id:${row.id}`);
+        request.get(`/player/${row._id}`).then(res => {
+          Object.assign(this.form, res.data.data)
+
+          this.mode = 'edit'
+          this.currPlayerId = row._id
+          this.editPlayerVisible = true
+        })
+      },
+      resetForm(){
+        this.form = {
+          username: '',
+          name: '',
+          role: '',
+          currExp: 0,
+          level: {
+            exp_level: 0,
+            skill_level: 0
+          }
+        }
+      },
+      savePlayer(){
+
+        if (this.mode == 'add') {
+          request.post(`/player/add`, this.form).then(res => {
+            this.getData()
+            this.editPlayerVisible = false
+          })
+        } else {
+          request.post(`/player/update/${this.currPlayerId}`, this.form).then(res => {
+            this.getData()
+            this.editPlayerVisible = false
+          })
+        }
+      },
+      addPlayer(){
+        this.resetForm()
+        this.editPlayerVisible = true
+        this.mode = 'add'
       },
       handleDelete(index, row) {
 
@@ -167,9 +216,22 @@
           this.getData()
         })
       },
-      batchSelect(val) {
-        this.batchSelectArray = val;
+
+      // 批量删除
+      batchRemove(){
+        let rows =  this.$refs['playerTable'].selection
+        if(rows.length <= 0){
+          this.$message({message: '请选择待删除对象',})
+          return
+        }
+
+        let arr = rows.map(item => item['_id'])
+        request.post('/player/batchremove', {ids: arr}).then(res => {
+          this.getData()
+          this.$message({message: '批量删除成功', type: 'success'})
+        })
       },
+
       batchAdd(){
 
         let querys = [{

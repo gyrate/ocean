@@ -13,15 +13,25 @@ class PlayerController extends Controller {
 
   }
 
+  // 获取单个玩家详情
+  async getPlayerById(ctx) {
+    // const query = ctx.query
+    var res = await ctx.model.Player.findOne({_id: ctx.params.id})
+    ctx.body = res
+  }
+
   // 添加
   async add(ctx) {
     const reqBody = ctx.request.body
-    let res = await ctx.model.Player.create({
-      name: "haha" + parseInt(Math.random() * 10000),
-      currExp: 210
-    })
+    let res = await ctx.model.Player.create(reqBody)
+    ctx.body = res
+  }
 
-    //返回操作结果
+  async update(ctx){
+    const reqBody = ctx.request.body
+    // console.log(reqBody)
+    // console.log(' ctx.params.id:' + ctx.params.id)
+    let res = await ctx.model.Player.update({_id: ctx.params.id}, reqBody)
     ctx.body = res
   }
 
@@ -29,17 +39,6 @@ class PlayerController extends Controller {
   async remove(ctx) {
     const query = ctx.request.body
     ctx.body = await ctx.model.Player.remove({_id: query.id})
-  }
-
-  // 更新
-  async update(id, newItem){
-    if(!id || !newItem){
-      return
-    }
-    const { ctx } = this
-    await ctx.model.Player.update({_id:id}, newItem, e=>{
-      console.log('update completed')
-    })
   }
 
   // 批量添加
@@ -51,11 +50,10 @@ class PlayerController extends Controller {
   }
 
   // 批量删除
-  async batchRemove(ctx){
+  async batchRemove(ctx) {
     const query = ctx.request.body
-    ctx.body = await ctx.model.Player.deleteMany(query, err => {
-      console.log(err)
-    })
+    let res = await ctx.model.Player.remove({_id: {$in: query.ids}})
+    ctx.body = res
   }
 
 }

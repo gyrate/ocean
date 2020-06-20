@@ -27,6 +27,12 @@ module.exports = appInfo => {
     ]
   };
 
+  config.onerror = {
+    json(err, ctx) {
+      ctx.body = {code: 0, message: 'error', error: err}
+    }
+  };
+
   // database
   config.mongoose = {
     client: {
