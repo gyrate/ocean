@@ -22,6 +22,10 @@ export default function createRouter() {
       {
         path: '/player',
         component: () => import('../view/player/index')
+      },
+      {
+        path: '/sharing_log',
+        component: () => import('../view/sharing/index')
       }
     ]
   })

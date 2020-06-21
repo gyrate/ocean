@@ -22,4 +22,8 @@ module.exports = app => {
   router.post('/player/batchadd',controller.player.batchAdd)
   router.post('/player/remove', controller.player.remove)
   router.post('/player/batchremove', controller.player.batchRemove)
+
+  // 分享会记录
+  router.get('/sharing_log/query',controller.sharingLog.query)
+  router.post('/sharing_log/add',controller.sharingLog.add)
 };

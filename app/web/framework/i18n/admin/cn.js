@@ -3,6 +3,7 @@ export default {
   menu: {
     home: '首页',
     player: '玩家',
+    sharing_log: '分享会记录',
     articlemanage: '文章管理',
     articlequery: '文章查询',
     articleadd: '添加文章'

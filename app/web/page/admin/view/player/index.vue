@@ -36,6 +36,8 @@
       </el-table-column>
       <el-table-column prop="currExp" label="当前经验值">
       </el-table-column>
+      <el-table-column prop="exp.sharing" label="当前经验值">
+      </el-table-column>
       <!--<el-table-column prop="currExp" label="日报获得">-->
       <!--</el-table-column>-->
       <!--<el-table-column prop="currExp" label="分享获得">-->
@@ -113,6 +115,9 @@
           level:{
             exp_level: 0,
             skill_level: 0
+          },
+          exp:{
+            sharing: 0
           }
         },
         total: 100,
