@@ -13,6 +13,7 @@
       <el-button type="success" size="small" @click="addPlayer">新增玩家</el-button>
       <el-button type="primary" size="small" @click="batchAdd">批量导入</el-button>
       <el-button type="primary" size="small" @click="batchRemove">批量删除</el-button>
+      <el-button type="success" size="small" @click="reviseExp">获取玩家的总经验值</el-button>
     </div>
 
     <el-table
@@ -36,7 +37,7 @@
       </el-table-column>
       <el-table-column prop="currExp" label="当前经验值">
       </el-table-column>
-      <el-table-column prop="exp.sharing" label="当前经验值">
+      <el-table-column prop="exp.sharing" label="分享获得经验值">
       </el-table-column>
       <!--<el-table-column prop="currExp" label="日报获得">-->
       <!--</el-table-column>-->
@@ -259,6 +260,13 @@
         request.post('player/batchadd', querys).then(res => {
           this.$message(`批量添加成功!`)
           this.getData()
+        })
+      },
+
+      reviseExp() {
+        request.post(`/player/revise_exp`, {}).then(res => {
+          this.$message(`同步数据结束!`)
+          // this.getData()
         })
       }
     }

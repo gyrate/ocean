@@ -13,6 +13,12 @@ class PlayerController extends Controller {
 
   }
 
+  //获取玩家经验值
+  async reviseExp(ctx) {
+    let res = await ctx.service.player.reviseExp()
+    ctx.body = res
+  }
+
   // 获取单个玩家详情
   async getPlayerById(ctx) {
     // const query = ctx.query

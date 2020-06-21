@@ -22,6 +22,7 @@ module.exports = app => {
   router.post('/player/batchadd',controller.player.batchAdd)
   router.post('/player/remove', controller.player.remove)
   router.post('/player/batchremove', controller.player.batchRemove)
+  router.post('/player/revise_exp', controller.player.reviseExp)
 
   // 分享会记录
   router.get('/sharing_log/query',controller.sharingLog.query)
