@@ -19,6 +19,11 @@ class PlayerController extends Controller {
     ctx.body = res
   }
 
+  async reviseExp2(ctx) {
+    let res = await ctx.service.player.reviseExp2()
+    ctx.body = res
+  }
+
   // 获取单个玩家详情
   async getPlayerById(ctx) {
     // const query = ctx.query

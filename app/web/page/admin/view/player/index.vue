@@ -74,7 +74,7 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="编辑玩家" :visible.sync="editPlayerVisible" width="80%">
+    <el-dialog title="编辑玩家" :visible.sync="editPlayerVisible" width="500px">
       <div>
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="用户名">
@@ -264,7 +264,7 @@
       },
 
       reviseExp() {
-        request.post(`/player/revise_exp`, {}).then(res => {
+        request.post(`/player/revise_exp2`, {}).then(res => {
           this.$message(`同步数据结束!`)
           // this.getData()
         })
