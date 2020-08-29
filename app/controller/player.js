@@ -25,7 +25,7 @@ class PlayerController extends Controller {
   }
 
   // 获取单个玩家详情
-  async getPlayerById(ctx) {
+  async getDetailById(ctx) {
     // const query = ctx.query
     var res = await ctx.model.Player.findOne({_id: ctx.params.id})
     ctx.body = res

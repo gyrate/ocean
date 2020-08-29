@@ -4,6 +4,7 @@ export default {
     home: '首页',
     player: '玩家',
     sharing_log: '分享会记录',
+    exp:'经验值',
     articlemanage: '文章管理',
     articlequery: '文章查询',
     articleadd: '添加文章'

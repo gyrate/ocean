@@ -1,6 +1,7 @@
 {
   "chunk/0.js": "/public/js/chunk/0.js",
   "chunk/1.js": "/public/js/chunk/1.js",
+  "chunk/2.js": "/public/js/chunk/2.js",
   "admin.js": "/public/js/chunk/admin.js",
   "runtime.js": "/public/js/runtime.js",
   "font/element-icons.ttf": "/public/font/element-icons.ttf",

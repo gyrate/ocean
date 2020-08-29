@@ -26,6 +26,10 @@ export default function createRouter() {
       {
         path: '/sharing_log',
         component: () => import('../view/sharing/index')
+      },
+      {
+        path: '/exp',
+        component: () => import('../view/exp/index')
       }
     ]
   })

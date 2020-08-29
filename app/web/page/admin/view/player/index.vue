@@ -13,7 +13,7 @@
       <el-button type="success" size="small" @click="addPlayer">新增玩家</el-button>
       <el-button type="primary" size="small" @click="batchAdd">批量导入</el-button>
       <el-button type="primary" size="small" @click="batchRemove">批量删除</el-button>
-      <el-button type="success" size="small" @click="reviseExp">获取玩家的总经验值</el-button>
+      <!--<el-button type="success" size="small" @click="reviseExp">获取玩家的总经验值</el-button>-->
     </div>
 
     <el-table
@@ -37,8 +37,8 @@
       </el-table-column>
       <el-table-column prop="currExp" label="当前经验值">
       </el-table-column>
-      <el-table-column prop="exp.sharing" label="分享获得经验值">
-      </el-table-column>
+      <!--<el-table-column prop="exp.sharing" label="分享获得经验值">-->
+      <!--</el-table-column>-->
       <!--<el-table-column prop="currExp" label="日报获得">-->
       <!--</el-table-column>-->
       <!--<el-table-column prop="currExp" label="分享获得">-->
@@ -55,7 +55,7 @@
               width="180">
         <template slot-scope="props">
           <router-link :to="{params: {id: props.row.id}}" tag="span">
-            <el-button type="info" size="small" icon="edit" @click="handleEdit(props.$index, props.row)">修改</el-button>
+            <el-button type="primary" size="small" icon="edit" @click="handleEdit(props.$index, props.row)">修改</el-button>
           </router-link>
           <el-button type="danger" size="small" icon="delete" @click="handleDelete(props.$index, props.row)">删除</el-button>
         </template>
@@ -146,12 +146,6 @@
           { categoryId: 3, name: "Egg" }
         ];
       },
-//      total() {
-//        return this.$store.state.articleTotal;
-//      },
-//      dataList() {
-//        return this.$store.state.dataList;
-//      }
     },
     mounted(){
       this.getData()
