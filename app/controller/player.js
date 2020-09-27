@@ -6,10 +6,39 @@ class PlayerController extends Controller {
 
   // 查询
   async query (ctx) {
-    const query = ctx.request.body
+
+    let query = ctx.request.query
+
+    let pageNumber = parseInt(query.pageNumber || 1)
+    let pageSize = parseInt(query.pageSize || 10)
+
+    if (query.name) {
+      // 多条件模糊查询
+      let keyword = query.name.trim()
+      query = {
+        $or: [
+          {name: {$regex: keyword}},
+          {username: {$regex: keyword}}
+        ]
+      }
+    } else {
+      query = {}
+    }
+
     // 访问数据库表查询所有项
-    var res = await ctx.model.Player.find(query)
-    ctx.body = res
+    var res = await ctx.model.Player
+      .find(query)
+      .limit(pageSize)
+      .skip((pageNumber - 1) * pageSize)
+
+    var total = await ctx.model.Player.count(query)
+
+    ctx.body = {
+      dataList: res,
+      total,
+      pageNumber,
+      pageSize
+    }
 
   }
 

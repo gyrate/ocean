@@ -1,19 +1,21 @@
 <template>
   <div>
     <div class="search">
-      <el-row class="clear">
-        <label>玩家姓名:</label>
-        <el-input class="search-input" clearable v-model="q.name"  placeholder="关键字" size="small"></el-input>
-      </el-select>
-        <el-button class="search-button" type="primary" @click="query()" size="small">查询</el-button>
-      </el-row>
+      <el-form :inline="true" :model="filterData" @keyup.enter.native="query">
+        <el-form-item label="关键词搜索">
+          <el-input v-model="filterData.name" placeholder="输入用户名或玩家姓名" size="small"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="query" size="small">查询</el-button>
+        </el-form-item>
+      </el-form>
+
     </div>
 
     <div class="button-group">
       <el-button type="success" size="small" @click="addPlayer">新增玩家</el-button>
-      <el-button type="primary" size="small" @click="batchAdd">批量导入</el-button>
-      <el-button type="primary" size="small" @click="batchRemove">批量删除</el-button>
-      <!--<el-button type="success" size="small" @click="reviseExp">获取玩家的总经验值</el-button>-->
+      <el-button type="primary" size="small" @click="batchAdd">导入数据</el-button>
+      <el-button type="primary" size="small" @click="batchRemove">删除</el-button>
     </div>
 
     <el-table
@@ -31,24 +33,13 @@
       </el-table-column>
       <el-table-column prop="role" label="角色">
       </el-table-column>
-      <el-table-column prop="level.exp_level" label="经验等级">
-      </el-table-column>
-      <el-table-column prop="level.skill_level" label="职业等级">
-      </el-table-column>
+      <!--<el-table-column prop="level.exp_level" label="经验等级">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column prop="level.skill_level" label="职业等级">-->
+      <!--</el-table-column>-->
       <el-table-column prop="currExp" label="当前经验值">
       </el-table-column>
-      <!--<el-table-column prop="exp.sharing" label="分享获得经验值">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column prop="currExp" label="日报获得">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column prop="currExp" label="分享获得">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column prop="currExp" label="任务获得">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column prop="currExp" label="活动获得">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column prop="currExp" label="建议获得">-->
-      <!--</el-table-column>-->
+
 
       <el-table-column
               label="操作"
@@ -66,9 +57,9 @@
       <el-pagination
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :current-page="q.pageIndex"
+              :current-page="filterData.pageNumber"
               :page-sizes="[10, 15, 20, 50]"
-              :page-size="q.pageSize"
+              :page-size="filterData.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
               :total="total">
       </el-pagination>
@@ -97,17 +88,21 @@
   </div>
 </template>
 <script >
-  import request from '../../../../framework/network/request'
+  import request     from '../../../../framework/network/request'
+  import serialize from '../../../../framework/utils/index'
   export default{
     name: 'player',
     component: {},
     data(){
       return {
-        q: {
+        filterData: {
           name: '',
-          pageIndex: 1,
+          pageNumber: 1,
           pageSize: 10
         },
+        // 列表项总数
+        total: 100,
+
         form:{
           username:'',
           name:'',
@@ -121,10 +116,12 @@
             sharing: 0
           }
         },
-        total: 100,
+
         //请求时的loading效果
         loading: false,
+
         dataList: [],
+
         editPlayerVisible: false,
         mode: '', //add edit
         currPlayerId: null
@@ -152,22 +149,30 @@
     },
     methods: {
       getData() {
-        request.get('/player/query').then(res=>{
-          this.dataList = res.data.data
+
+        request.get(`/player/query`+ serialize(this.filterData)).then(res => {
+        // request.get(`/player/query`).then(res => {
+
+          const {dataList, pageNumber, pageSize, total} = res.data.data
+
+          this.dataList = dataList
+          this.filterData.pageSize = pageSize
+          this.filterData.pageNumber = pageNumber
+          this.total = total
         })
       },
       query() {
-        this.fetchApi(this, this.q);
+        this.getData()
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-        this.q.pageSize = val;
-        this.fetchApi(this, this.q);
+        console.log(`每页 ${val} 条`)
+        this.filterData.pageSize = val
+        this.getData()
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-        this.q.pageIndex = val;
-        this.fetchApi(this, this.q);
+        console.log(`当前页: ${val}`)
+        this.filterData.pageNumber = val
+        this.getData()
       },
       handleEdit(index, row) {
         request.get(`/player/${row._id}`).then(res => {
@@ -234,22 +239,15 @@
 
       batchAdd(){
 
-        let querys = [{
-          name: 'num0',
-          currExp: 0
-        },{
-          name: 'num1',
-          currExp: 10
-        },{
-          name: 'num2',
-          currExp: 20
-        },{
-          name: 'num3',
-          currExp: 30
-        },{
-          name: 'num4',
-          currExp: 40
-        }]
+        let querys = []
+
+        for (let i = 0; i < 20; i++) {
+          querys.push({
+            username: `user${i}`,
+            name: `新用户${i}`,
+            currExp: 0
+          })
+        }
 
         request.post('player/batchadd', querys).then(res => {
           this.$message(`批量添加成功!`)

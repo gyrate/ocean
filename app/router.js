@@ -35,7 +35,7 @@ module.exports = app => {
   // POST	/posts	posts	app.controllers.posts.create
   // PUT	/posts/:id	post	app.controllers.posts.update
   // DELETE	/posts/:id	post	app.controllers.posts.destroy
-  router.resources('explog', '/explog', controller.expLog);
+  router.resources('explog', '/explog', controller.expLog)
 
   // 分享会记录
   router.get('/sharing_log/query',controller.sharingLog.query)

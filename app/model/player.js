@@ -6,13 +6,14 @@ module.exports = app => {
     name: {type: String},
     currExp: {type: Number},
     role: {type: String},
-    level: {
-      exp_level: {type: Number},
-      skill_level: {type: Number}
-    },
-    exp: {
-      sharing: {type: Number}
-    }
+    username: {type: String},
+    // level: {
+    //   exp_level: {type: Number},
+    //   skill_level: {type: Number}
+    // },
+    // exp: {
+    //   sharing: {type: Number}
+    // }
   });
 
   return mongoose.model('Player', UserSchema);
