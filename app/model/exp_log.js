@@ -3,11 +3,11 @@ module.exports = app => {
   const Schema = mongoose.Schema;
 
   const NewSchema = new Schema({
-    name: {type: String},
+    username: {type: String},
     from: {type: String},
     amount: {type: Number},
-    time:{type:String},
-    belong:{type:String}
+    // time:{type:String},
+    description:{type:String}
   });
 
   return mongoose.model('ExpLog', NewSchema);

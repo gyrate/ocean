@@ -35,7 +35,11 @@ module.exports = app => {
   // POST	/posts	posts	app.controllers.posts.create
   // PUT	/posts/:id	post	app.controllers.posts.update
   // DELETE	/posts/:id	post	app.controllers.posts.destroy
+
   router.resources('explog', '/explog', controller.expLog)
+  router.post('/explog/batchremove', controller.expLog.batchRemove)
+  router.post('/explog/batchadd',controller.expLog.batchAdd)
+  router.post('/explog/update/:id',controller.expLog.update)
 
   // 分享会记录
   router.get('/sharing_log/query',controller.sharingLog.query)

@@ -3,14 +3,14 @@
         <div class="search">
             <el-row class="clear">
                 <label>玩家姓名:</label>
-                <el-input class="search-input" clearable v-model="q.name"  placeholder="关键字" size="small"></el-input>
+                <el-input class="search-input" clearable v-model="filterData.keyword"  placeholder="关键字" size="small"></el-input>
                 </el-select>
-                <el-button class="search-button" type="primary" @click="query()" size="small">查询</el-button>
+                <el-button class="search-button" type="primary" @click="query" size="small">查询</el-button>
             </el-row>
         </div>
 
         <div class="button-group">
-            <el-button type="success" size="small" @click="addPlayer">新增玩家</el-button>
+            <el-button type="success" size="small" @click="addPlayer">新增记录</el-button>
             <el-button type="primary" size="small" @click="batchAdd">批量导入</el-button>
             <el-button type="primary" size="small" @click="batchRemove">批量删除</el-button>
         </div>
@@ -28,13 +28,9 @@
             </el-table-column>
             <el-table-column prop="name" label="玩家姓名">
             </el-table-column>
-            <el-table-column prop="role" label="角色">
+            <el-table-column prop="amount" label="获得经验值">
             </el-table-column>
-            <el-table-column prop="level.exp_level" label="经验等级">
-            </el-table-column>
-            <el-table-column prop="level.skill_level" label="职业等级">
-            </el-table-column>
-            <el-table-column prop="currExp" label="当前经验值">
+            <el-table-column prop="description" label="描述">
             </el-table-column>
 
             <el-table-column
@@ -53,31 +49,31 @@
             <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page="q.pageIndex"
+                    :current-page="filterData.pageNumber"
                     :page-sizes="[10, 15, 20, 50]"
-                    :page-size="q.pageSize"
+                    :page-size="filterData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total">
             </el-pagination>
         </div>
 
-        <el-dialog title="编辑玩家" :visible.sync="editorVisible" width="500px">
+        <el-dialog title="编辑记录" :visible.sync="editorVisible" width="500px">
             <div>
-                <el-form ref="form" :model="form" label-width="80px">
+                <el-form ref="form" :model="form" label-width="100px" @keyup.enter.native="save">
                     <el-form-item label="用户名">
                         <el-input v-model="form.username"></el-input>
                     </el-form-item>
-                    <el-form-item label="玩家姓名">
-                        <el-input v-model="form.name"></el-input>
+                    <el-form-item label="获得经验值">
+                        <el-input-number v-model="form.amount" :min="1"  ></el-input-number>
                     </el-form-item>
-                    <el-form-item label="角色">
-                        <el-input v-model="form.role"></el-input>
+                    <el-form-item label="描述">
+                        <el-input type="textarea" v-model="form.description" :rows="2" placeholder="输入获得经验值的相关活动或原因"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="editorVisible = false">取 消</el-button>
-                <el-button type="primary" @click="savePlayer">保 存</el-button>
+                <el-button type="primary" @click="save">保 存</el-button>
             </div>
         </el-dialog>
 
@@ -85,28 +81,23 @@
 </template>
 <script >
   import request from '../../../../framework/network/request'
+  import serialize from '../../../../framework/utils/index'
+
   export default{
     name: 'player',
     component: {},
     data(){
       return {
-        q: {
-          name: '',
-          pageIndex: 1,
+        filterData: {
+          keyword: '',
+          pageNumber: 1,
           pageSize: 10
         },
         form:{
-          username:'',
-          name:'',
-          role:'',
-          currExp: 0,
-          level:{
-            exp_level: 0,
-            skill_level: 0
-          },
-          exp:{
-            sharing: 0
-          }
+          username: '',
+          from: '',
+          amount: 0,
+          description: ''
         },
         total: 100,
         //请求时的loading效果
@@ -114,7 +105,7 @@
         dataList: [],
         editorVisible: false,
         mode: '', //add edit
-        currPlayerId: null
+        currExplogId: null
       }
     },
     computed: {
@@ -125,54 +116,56 @@
     },
     methods: {
       getData() {
-        request.get('/explog').then(res=>{
-          this.dataList = res.data.data
+        request.get('/explog' + serialize(this.filterData)).then(res => {
+
+          const {dataList, pageNumber, pageSize, total} = res.data.data
+
+          this.dataList = dataList
+          this.filterData.pageSize = pageSize
+          this.filterData.pageNumber = pageNumber
+          this.total = total
         })
       },
       query() {
-        // this.fetchApi(this, this.q);
+        this.filterData.pageNumber = 1
         this.getData()
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
-        this.q.pageSize = val;
-        this.fetchApi(this, this.q);
+        this.filterData.pageSize = val;
+        this.getData()
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-        this.q.pageIndex = val;
-        this.fetchApi(this, this.q);
+        this.filterData.pageNumber = val;
+        this.getData()
       },
       handleEdit(index, row) {
-        request.get(`/player/${row._id}`).then(res => {
+        request.get(`/explog/${row._id}`).then(res => {
           Object.assign(this.form, res.data.data)
 
           this.mode = 'edit'
-          this.currPlayerId = row._id
+          this.currExplogId = row._id
           this.editorVisible = true
         })
       },
       resetForm(){
         this.form = {
-          username: '',
-          name: '',
-          role: '',
-          currExp: 0,
-          level: {
-            exp_level: 0,
-            skill_level: 0
-          }
+          username: 'zhanglinhai',
+          from: '',
+          amount: 10,
+          description: '每月任务'
         }
       },
-      savePlayer(){
+      save(){
 
         if (this.mode == 'add') {
-          request.post(`/player/add`, this.form).then(res => {
+          request.get(`/explog/new` + serialize(this.form)).then(res => {
             this.getData()
             this.editorVisible = false
           })
         } else {
-          request.post(`/player/update/${this.currPlayerId}`, this.form).then(res => {
+          request.post(`/explog/update/${this.currExplogId}`, this.form).then(res => {
             this.getData()
             this.editorVisible = false
           })
@@ -185,8 +178,8 @@
       },
       handleDelete(index, row) {
 
-        request.post('player/remove',{id: row._id}).then(res=>{
-          this.$message(`删除${row.name}成功!`)
+        request.post('explog/remove',{id: row._id}).then(res=>{
+          this.$message(`删除${row.username}成功!`)
           this.getData()
         })
       },
@@ -200,7 +193,7 @@
         }
 
         let arr = rows.map(item => item['_id'])
-        request.post('/player/batchremove', {ids: arr}).then(res => {
+        request.post('/explog/batchremove', {ids: arr}).then(res => {
           this.getData()
           this.$message({message: '批量删除成功', type: 'success'})
         })
@@ -208,24 +201,18 @@
 
       batchAdd(){
 
-        let querys = [{
-          name: 'num0',
-          currExp: 0
-        },{
-          name: 'num1',
-          currExp: 10
-        },{
-          name: 'num2',
-          currExp: 20
-        },{
-          name: 'num3',
-          currExp: 30
-        },{
-          name: 'num4',
-          currExp: 40
-        }]
+        let querys = []
 
-        request.post('player/batchadd', querys).then(res => {
+        for (let i = 0; i < 20; i++) {
+          querys.push({
+            username: 'zhanglinhai',
+            from: '',
+            amount: 10 + parseInt(Math.random() * 10),
+            description: '每月任务'
+          })
+        }
+
+        request.post('explog/batchadd', querys).then(res => {
           this.$message(`批量添加成功!`)
           this.getData()
         })
