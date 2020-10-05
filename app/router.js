@@ -23,7 +23,6 @@ module.exports = app => {
   router.post('/player/remove', controller.player.remove)
   router.post('/player/batchremove', controller.player.batchRemove)
   router.post('/player/revise_exp', controller.player.reviseExp)
-  router.post('/player/revise_exp2', controller.player.reviseExp2)
 
   //经验值
   //用RESTful 风格定义路由

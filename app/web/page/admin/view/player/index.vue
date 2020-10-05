@@ -16,6 +16,7 @@
       <el-button type="success" size="small" @click="addPlayer">新增玩家</el-button>
       <el-button type="primary" size="small" @click="batchAdd">导入数据</el-button>
       <el-button type="primary" size="small" @click="batchRemove">删除</el-button>
+      <el-button type="primary" size="small" @click="updateExp">计算经验值</el-button>
     </div>
 
     <el-table
@@ -255,12 +256,37 @@
         })
       },
 
+      async updateExp() {
+        const list = await this.reviseExp()
+
+        for (let i = 0; i < list.length; i++) {
+          await this.updatePlayer(list[i]['_id'], {currExp: list[i]['currExp']})
+        }
+        this.getData()
+        this.$message({message: '计算完成', type: 'success'})
+      },
+
       reviseExp() {
-        request.post(`/player/revise_exp2`, {}).then(res => {
-          this.$message(`同步数据结束!`)
-          // this.getData()
+        return new Promise((resolve, reject) => {
+          request.post('/player/revise_exp').then(res => {
+            resolve(res.data.data)
+          }).catch(err => {
+            reject(err)
+          })
+        })
+      },
+
+      updatePlayer(uid, obj){
+        return new Promise((resolve, reject) => {
+          request.post(`/player/update/${uid}`, obj).then(res => {
+            resolve()
+          })
         })
       }
+
+
+
+
     }
   }
 </script>
